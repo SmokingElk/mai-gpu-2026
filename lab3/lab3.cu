@@ -30,6 +30,7 @@ static int c_nc;
 
 HD int classifyPixel(uchar4 p)
 {
+    // score = -(p-avg)^T * cov^-1 * (p-avg) - log(|det(cov)|)
     int best = 0;
     double bestScore = 0.0;
     for (int j = 0; j < c_nc; j++) {

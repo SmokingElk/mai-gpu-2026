@@ -196,6 +196,7 @@ int main(void)
             double v;
             if (!readDouble(&v))
                 fail("failed to parse matrix element");
+            // храним по столбцам
             hA[(size_t)j * n + i] = v;
         }
     }

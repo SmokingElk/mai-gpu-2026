@@ -1,0 +1,33 @@
+==42034== NVPROF is profiling process 42034, command: ./lab4
+==42034== Profiling application: ./lab4
+==42034== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   74.13%  57.293ms      1023  56.004us  1.7600us  168.54us  eliminateKernel(double*, double const *, int, int)
+                    7.27%  5.6208ms         1  5.6208ms  5.6208ms  5.6208ms  [CUDA memcpy HtoD]
+                    4.58%  3.5415ms      1024  3.4580us  1.5680us  4.7680us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__reduce::ReduceAgent<thrust::zip_iterator<thrust::tuple<double*, thrust::cuda_cub::counting_iterator_t<long>, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>>, thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>*, thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>, int, thrust::cuda_cub::__extrema::arg_max_f<double, long, AbsLess>>, thrust::zip_iterator<thrust::tuple<double*, thrust::cuda_cub::counting_iterator_t<long>, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>>, thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>*, int, thrust::cuda_cub::__extrema::arg_max_f<double, long, AbsLess>>(long, thrust::cuda_cub::counting_iterator_t<long>, thrust::null_type, thrust::null_type)
+                    4.08%  3.1539ms      2048  1.5390us     576ns  9.2160us  [CUDA memcpy DtoH]
+                    3.95%  3.0508ms      1016  3.0020us  1.3120us  4.1600us  swapRowsKernel(double*, int, int, int)
+                    3.05%  2.3586ms      1023  2.3050us  1.4400us  2.7840us  factorKernel(double*, double*, int, int, double)
+                    1.87%  1.4468ms      1024  1.4120us  1.1200us  1.5360us  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::__uninitialized_copy::functor<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>*, thrust::pointer<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>, thrust::cuda_cub::par_t, thrust::use_default, thrust::use_default>>, long>, thrust::cuda_cub::__uninitialized_copy::functor<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>*, thrust::pointer<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>, thrust::cuda_cub::par_t, thrust::use_default, thrust::use_default>>, long>(long, thrust::null_type)
+                    1.07%  826.91us      1024     807ns     608ns     896ns  void thrust::cuda_cub::core::_kernel_agent<thrust::cuda_cub::__parallel_for::ParallelForAgent<thrust::cuda_cub::for_each_f<thrust::pointer<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>, thrust::cuda_cub::par_t, thrust::use_default, thrust::use_default>, thrust::detail::wrapped_function<thrust::detail::allocator_traits_detail::gozer, void>>, long>, thrust::cuda_cub::for_each_f<thrust::pointer<thrust::tuple<double, long, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type, thrust::null_type>, thrust::cuda_cub::par_t, thrust::use_default, thrust::use_default>, thrust::detail::wrapped_function<thrust::detail::allocator_traits_detail::gozer, void>>, long>(long, thrust::null_type)
+      API calls:   93.88%  6.33100s      4096  1.5457ms     934ns  5.9820ms  cudaStreamSynchronize
+                    3.37%  227.36ms      2050  110.91us  4.6300us  203.10ms  cudaMalloc
+                    1.24%  83.498ms      6134  13.612us  3.6950us  3.0051ms  cudaLaunchKernel
+                    0.48%  32.243ms      1025  31.456us  15.389us  5.9846ms  cudaMemcpy
+                    0.40%  27.215ms      1024  26.576us  15.664us  1.0967ms  cudaMemcpyAsync
+                    0.28%  19.178ms      2050  9.3550us  1.9600us  2.0413ms  cudaFree
+                    0.10%  6.5006ms     43001     151ns      94ns  25.113us  cudaGetLastError
+                    0.08%  5.2826ms      5120  1.0310us     257ns  1.9928ms  cudaDeviceGetAttribute
+                    0.08%  5.2482ms      9217     569ns     227ns  26.544us  cudaGetDevice
+                    0.06%  4.2834ms         1  4.2834ms  4.2834ms  4.2834ms  cudaFuncGetAttributes
+                    0.03%  1.8807ms      6144     306ns      94ns  935.13us  cudaPeekAtLastError
+                    0.00%  237.31us       114  2.0810us     119ns  104.77us  cuDeviceGetAttribute
+                    0.00%  52.244us         1  52.244us  52.244us  52.244us  cuDeviceGetName
+                    0.00%  9.7780us         1  9.7780us  9.7780us  9.7780us  cuDeviceGetPCIBusId
+                    0.00%  9.1380us         2  4.5690us     406ns  8.7320us  cudaGetDeviceCount
+                    0.00%  3.9510us         1  3.9510us  3.9510us  3.9510us  cudaDeviceSynchronize
+                    0.00%  2.3970us         3     799ns     228ns  1.4030us  cuDeviceGetCount
+                    0.00%  1.6010us         2     800ns     159ns  1.4420us  cuDeviceGet
+                    0.00%     751ns         1     751ns     751ns     751ns  cuDeviceTotalMem
+                    0.00%     507ns         1     507ns     507ns     507ns  cuDeviceGetUuid
+                    0.00%     369ns         1     369ns     369ns     369ns  cuModuleGetLoadingMode

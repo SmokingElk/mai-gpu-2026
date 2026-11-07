@@ -1,0 +1,24 @@
+==57885== NVPROF is profiling process 57885, command: ./lab5
+==57885== Profiling application: ./lab5
+==57885== Profiling result:
+            Type  Time(%)      Time     Calls       Avg       Min       Max  Name
+ GPU activities:   88.52%  74.495us         1  74.495us  74.495us  74.495us  bitonicSortSmem(int*, int)
+                    9.89%  8.3200us         1  8.3200us  8.3200us  8.3200us  [CUDA memcpy DtoH]
+                    1.60%  1.3440us         1  1.3440us  1.3440us  1.3440us  [CUDA memcpy HtoD]
+      API calls:   81.86%  172.87ms         1  172.87ms  172.87ms  172.87ms  cudaHostAlloc
+                   17.54%  37.039ms         1  37.039ms  37.039ms  37.039ms  cudaLaunchKernel
+                    0.23%  481.24us         1  481.24us  481.24us  481.24us  cudaFreeHost
+                    0.11%  226.20us         1  226.20us  226.20us  226.20us  cudaFree
+                    0.09%  193.70us       114  1.6990us     106ns  81.825us  cuDeviceGetAttribute
+                    0.07%  153.80us         1  153.80us  153.80us  153.80us  cudaMalloc
+                    0.05%  99.536us         2  49.768us  38.149us  61.387us  cudaMemcpy
+                    0.03%  53.271us         1  53.271us  53.271us  53.271us  cudaDeviceSynchronize
+                    0.02%  46.551us         1  46.551us  46.551us  46.551us  cuDeviceGetPCIBusId
+                    0.01%  19.090us         1  19.090us  19.090us  19.090us  cuDeviceGetName
+                    0.00%  1.7940us         3     598ns     203ns     905ns  cuDeviceGetCount
+                    0.00%  1.2660us         2     633ns     160ns  1.1060us  cuDeviceGet
+                    0.00%  1.0060us         1  1.0060us  1.0060us  1.0060us  cudaGetLastError
+                    0.00%     801ns         1     801ns     801ns     801ns  cudaGetDeviceCount
+                    0.00%     680ns         1     680ns     680ns     680ns  cuDeviceTotalMem
+                    0.00%     513ns         1     513ns     513ns     513ns  cuDeviceGetUuid
+                    0.00%     509ns         1     509ns     509ns     509ns  cuModuleGetLoadingMode

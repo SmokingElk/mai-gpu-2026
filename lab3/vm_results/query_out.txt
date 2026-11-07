@@ -1,0 +1,10 @@
+Name                    : NVIDIA GeForce GTX 1650
+Compute capability      : 7.5
+Multiprocessors count   : 14
+Total global memory     : 4086169600
+Shared memory per block : 49152
+Total constant memory   : 65536
+Registers per block     : 65536
+Warp size               : 32
+Max threads per block   : (1024, 1024, 64)
+Max block               : (2147483647, 65535, 65535)

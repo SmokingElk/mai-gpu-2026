@@ -11,18 +11,16 @@
 #define MAX_PIXELS 100000000LL
 #define PATH_LEN 4096
 
-__global__ void robertsKernel(const uchar4 *src, uchar4 *dst, int w, int h)
+__global__ void robertsKernel(cudaTextureObject_t tex, uchar4 *dst, int w, int h)
 {
     int strideX = gridDim.x * blockDim.x;
     int strideY = gridDim.y * blockDim.y;
     for (int y = blockIdx.y * blockDim.y + threadIdx.y; y < h; y += strideY) {
         for (int x = blockIdx.x * blockDim.x + threadIdx.x; x < w; x += strideX) {
-            int xc = x + 1 < w ? x + 1 : w - 1;
-            int yc = y + 1 < h ? y + 1 : h - 1;
-            uchar4 p00 = src[(long long)y * w + x];
-            uchar4 p11 = src[(long long)yc * w + xc];
-            uchar4 p10 = src[(long long)yc * w + x];
-            uchar4 p01 = src[(long long)y * w + xc];
+            uchar4 p00 = tex2D<uchar4>(tex, (float)x, (float)y);
+            uchar4 p11 = tex2D<uchar4>(tex, (float)(x + 1), (float)(y + 1));
+            uchar4 p10 = tex2D<uchar4>(tex, (float)x, (float)(y + 1));
+            uchar4 p01 = tex2D<uchar4>(tex, (float)(x + 1), (float)y);
             double l00 = (299.0 * p00.x + 587.0 * p00.y + 114.0 * p00.z) / 1000.0;
             double l11 = (299.0 * p11.x + 587.0 * p11.y + 114.0 * p11.z) / 1000.0;
             double l10 = (299.0 * p10.x + 587.0 * p10.y + 114.0 * p10.z) / 1000.0;
@@ -107,17 +105,38 @@ int main(void)
     if ((err = cudaGetDeviceCount(&devCount)) != cudaSuccess || devCount < 1)
         fail("no CUDA device available");
 
-    uchar4 *dSrc = NULL, *dDst = NULL;
-    if ((err = cudaMalloc((void **)&dSrc, pxBytes)) != cudaSuccess)
-        fail("cudaMalloc failed");
+    cudaArray_t srcArr = NULL;
+    uchar4 *dDst = NULL;
     if ((err = cudaMalloc((void **)&dDst, pxBytes)) != cudaSuccess)
         fail("cudaMalloc failed");
-    if ((err = cudaMemcpy(dSrc, hSrc, pxBytes, cudaMemcpyHostToDevice)) != cudaSuccess)
-        fail("cudaMemcpy host to device failed");
+
+    cudaChannelFormatDesc chDesc = cudaCreateChannelDesc<uchar4>();
+    if ((err = cudaMallocArray(&srcArr, &chDesc, (size_t)w, (size_t)h)) != cudaSuccess)
+        fail("cudaMallocArray failed");
+    if ((err = cudaMemcpy2DToArray(srcArr, 0, 0, hSrc, (size_t)w * 4, (size_t)w * 4,
+                                   (size_t)h, cudaMemcpyHostToDevice)) != cudaSuccess)
+        fail("cudaMemcpy2DToArray failed");
+
+    cudaResourceDesc res;
+    memset(&res, 0, sizeof(res));
+    res.resType = cudaResourceTypeArray;
+    res.res.array.array = srcArr;
+
+    cudaTextureDesc texDesc;
+    memset(&texDesc, 0, sizeof(texDesc));
+    texDesc.addressMode[0] = cudaAddressModeClamp;
+    texDesc.addressMode[1] = cudaAddressModeClamp;
+    texDesc.filterMode = cudaFilterModePoint;
+    texDesc.readMode = cudaReadModeElementType;
+    texDesc.normalizedCoords = 0;
+
+    cudaTextureObject_t tex = 0;
+    if ((err = cudaCreateTextureObject(&tex, &res, &texDesc, NULL)) != cudaSuccess)
+        fail("cudaCreateTextureObject failed");
 
     dim3 block(BLOCK_X, BLOCK_Y);
     dim3 grid(GRID_X, GRID_Y);
-    robertsKernel<<<grid, block>>>((const uchar4 *)dSrc, dDst, (int)w, (int)h);
+    robertsKernel<<<grid, block>>>(tex, dDst, (int)w, (int)h);
     if ((err = cudaGetLastError()) != cudaSuccess)
         fail("kernel launch failed");
     if ((err = cudaDeviceSynchronize()) != cudaSuccess)
@@ -125,7 +144,8 @@ int main(void)
     if ((err = cudaMemcpy(hDst, dDst, pxBytes, cudaMemcpyDeviceToHost)) != cudaSuccess)
         fail("cudaMemcpy device to host failed");
 
-    cudaFree(dSrc);
+    cudaDestroyTextureObject(tex);
+    cudaFreeArray(srcArr);
     cudaFree(dDst);
 
     FILE *fout = fopen(dstPath, "wb");

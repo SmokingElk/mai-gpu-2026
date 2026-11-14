@@ -1,0 +1,2 @@
+INFO: mode=cpu threads=2
+INFO: 640x360, 12 frames, depth=8, ssaa=1 (1 rays/pixel), lights=74, wire=0

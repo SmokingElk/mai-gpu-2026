@@ -1,0 +1,2 @@
+INFO: mode=gpu device=NVIDIA GeForce GTX 1650
+INFO: 960x540, 120 frames, depth=10, ssaa=2 (4 rays/pixel), lights=399, wire=1
